@@ -8,6 +8,7 @@
 import { File } from './File';
 import {describe, expect, it} from "@jest/globals";
 
+// Tests unitaires via le framework Jest
 describe('File', () => {
     it('should read a file', async () => {
         const content = await File.read('package.json');

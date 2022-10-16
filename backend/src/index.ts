@@ -1,9 +1,10 @@
-import {File} from './File/File';
+import { File } from './File/File';
 import Arret from "./Types/Arret";
 import Branche from "./Types/Branche";
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 
+// Configuration du serveur
 dotenv.config();
 
 const app: Express = express();
@@ -15,7 +16,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.listen(port, async () => {
     const fileContent = await File.read("public/data/metro.txt");
-    const {arrets, branches} = await parseFile(fileContent);
+    const { arrets, branches } = await parseFile(fileContent);
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
 
@@ -31,7 +32,7 @@ const parseFile = async (content: string) => {
     const arrets: Array<Arret> = [];
     const branches: Array<Branche> = [];
     content.split('\n').forEach((line) => {
-        if (line.startsWith("V")){
+        if (line.startsWith("V")) {
             const strTab = line.split(/[;\s]/g).filter((s) => s !== '').map((s) => s.trim());
             arrets.push({
                 id: parseInt(strTab[1]),
@@ -41,7 +42,7 @@ const parseFile = async (content: string) => {
                 branchement: parseInt(strTab[strTab.length - 1])
             });
         }
-        else{
+        else {
             const strTab = line.split(" ");
             branches.push({
                 id: parseInt(strTab[0]),
@@ -50,6 +51,6 @@ const parseFile = async (content: string) => {
             });
         }
     });
-    return {arrets, branches};
+    return { arrets, branches };
 };
 
