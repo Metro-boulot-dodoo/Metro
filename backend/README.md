@@ -1,7 +1,9 @@
 # INSTALLING
 npm install
 # Adding env variables
-cp .env.example .env
+cp .env.example .env 
+OR
+copy .env.example .env
 change the values in .env
 # RUNNING
 npm start
