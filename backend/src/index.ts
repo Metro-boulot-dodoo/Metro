@@ -3,6 +3,7 @@ import Arret from "./Types/Arret";
 import Branche from "./Types/Branche";
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import Graphe from "./Graphe/Graphe";
 
 dotenv.config();
 
@@ -14,8 +15,10 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.listen(port, async () => {
-    const fileContent = await File.read("public/data/metro.txt");
+    const fileContent = await File.read("./public/data/metro.txt");
     const {arrets, branches} = await parseFile(fileContent);
+    const graphe = new Graphe(arrets, branches);
+    console.log(graphe);
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
 
@@ -43,8 +46,10 @@ const parseFile = async (content: string) => {
         }
         else{
             const strTab = line.split(" ");
+            if (strTab.length < 4)
+                return;
             branches.push({
-                id: parseInt(strTab[0]),
+                id: parseInt(strTab[1]),
                 connexions: [arrets[parseInt(strTab[1])], arrets[parseInt(strTab[2])]],
                 time: parseInt(strTab[3])
             });
