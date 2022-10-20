@@ -1,17 +1,17 @@
-import Arret from '../../../backend/src/Types/arret';
+import Sommet from '../../../backend/src/Types/Sommet';
 import axios from "axios";
 import { API_BASE_URL } from '../config/api';
 import StationPosition from '../Types/StationPosition';
 
-const getPcc = async (a1: Arret, a2: Arret) => {
+const getPcc = async (a1: Sommet, a2: Sommet) => {
 
-      var Stations: Arret[] = Array();
+      var Stations: Sommet[] = Array();
       const res = await axios({
             method: 'GET',
             url: API_BASE_URL + './pcc/?start=' + a1 + '&end=' + a2,
       });
       res.data.map((val: any) => {
-            let obj: Arret = val
+            let obj: Sommet = val
             Stations.push(obj)
       });
       return Stations;
@@ -19,13 +19,13 @@ const getPcc = async (a1: Arret, a2: Arret) => {
 
 const getStations = async () => {
 
-      var Stations: Arret[] = Array();
+      var Stations: Sommet[] = Array();
       const res = await axios({
             method: 'GET',
             url: API_BASE_URL + './stations',
       });
       res.data.map((val: any) => {
-            let obj: Arret = val
+            let obj: Sommet = val
             Stations.push(obj)
       });
       return Stations;
