@@ -2,8 +2,8 @@ import {File} from './File/File';
 import Sommet from "./Types/Sommet";
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import Graphe from './Graphe/Graphe';
-import Position from './Types/Position';
+import Graphe from "./Graphe/Graphe";
+import Position from "./Types/Position";
 
 dotenv.config();
 
