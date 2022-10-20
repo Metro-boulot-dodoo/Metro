@@ -3,11 +3,13 @@ import Sommet from "./Types/Sommet";
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import Graphe from "./Graphe/Graphe";
+import {HTTPResponse} from "./Utils";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
+let graphe: Graphe;
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');
@@ -16,9 +18,36 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(port, async () => {
     const fileContent = await File.read("./public/data/metro.txt");
     const arrets = await parseFile(fileContent);
-    const graphe = new Graphe(arrets);
+    graphe = new Graphe(arrets);
     // console.log(graphe.findPcc(arrets.at(0) as Sommet, arrets.at(8) as Sommet));
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
+});
+
+app.get("/stations", (req:Request, res: Response) => {
+    res.send(JSON.stringify(graphe.getArrets()));
+});
+
+app.get("/station/:id", (req:Request, res: Response) => {
+    const sommetId: number = parseInt(req.params.id as string) ?? -1;
+    const sommet = graphe.getSommet(sommetId);
+    if (!sommet)
+        res.status(400)
+            .send(HTTPResponse(200, "URL parameter id not found in graph", null));
+    res.status(200).send(HTTPResponse(200, "Done", sommet));
+});
+
+app.get("/pcc", (req:Request, res: Response) => {
+    const start: number = parseInt(req.query.start as string) ?? -1, end: number = parseInt(req.query.end as string) ?? -1;
+    const startPoint = graphe.getSommet(start), endPoint = graphe.getSommet(end);
+    if (!startPoint || !endPoint)
+        res.status(400)
+            .send(HTTPResponse(200, "Query string parameters start and/or end were not found in graph", null));
+    res.status(200)
+        .send(
+            HTTPResponse(200,
+            "Done",
+            graphe.findPcc(startPoint as Sommet, endPoint as Sommet))
+        );
 });
 
 

@@ -20,6 +20,18 @@ export default class Graphe implements IGraphe {
 
     readonly arrets: Sommet[];
 
+    getArrets(): Sommet[] {
+        return this.arrets;
+    }
+
+    getSommet(id: number): Sommet | undefined {
+        return this.arrets.at(id);
+    }
+
+    private getLastId(): number {
+        return this.arrets.at(this.arrets.length-1)?.id ?? -1;
+    }
+
     /**
      * Méthode permettant de retrouver le PCC d'un point vers l'autre
      * @param start {Sommet} Start point
