@@ -1,4 +1,4 @@
-import Sommet from '../../../backend/src/Types/Sommet';
+import Sommet from '../Types/Sommet';
 import axios from "axios";
 import { API_BASE_URL } from '../config/api';
 import StationPosition from '../Types/StationPosition';
