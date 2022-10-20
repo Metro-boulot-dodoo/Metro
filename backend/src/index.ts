@@ -2,7 +2,8 @@ import {File} from './File/File';
 import Sommet from "./Types/Sommet";
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import Graphe from "./Graphe/Graphe";
+import Graphe from './Graphe/Graphe';
+import Position from './Types/Position';
 
 dotenv.config();
 
@@ -15,8 +16,11 @@ app.get('/', (req: Request, res: Response) => {
 
 app.listen(port, async () => {
     const fileContent = await File.read("./public/data/metro.txt");
+    const filePosition = await File.read("./public/data/pospoints.txt");
     const arrets = await parseFile(fileContent);
     const graphe = new Graphe(arrets);
+    const positions = await getPositions(filePosition);
+    // positions.forEach((s: Position) => {console.log(s.x, s.y, s.name)})
     // console.log(graphe.findPcc(arrets.at(0) as Sommet, arrets.at(8) as Sommet));
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
@@ -56,3 +60,21 @@ const parseFile: (content: string) => Promise<Array<Sommet>> = async (content: s
     return arrets;
 };
 
+/**
+ * Méthode permettant de récupérer les coordonnées (x,y) des sommets listés dans le fichier pospoints.txt 
+ * @param {string} content Contenu du fichier à parser
+ * @returns Liste de coordonnées des sommets
+ */
+ const getPositions: (content: string) => Promise<Array<Position>> = async (content: string) => {
+
+    const positions: Array<Position> = [];
+    content.split('\n').forEach((line) => {
+        const strTab = line.split(';').filter((s) => s !== '').map((s) => s.trim());
+        positions.push({
+            x: parseInt(strTab[0]),
+            y: parseInt(strTab[1]),
+            name: strTab[2].replaceAll('@', ' ')
+        });
+    });
+    return positions;
+};
