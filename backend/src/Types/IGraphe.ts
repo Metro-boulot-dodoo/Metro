@@ -5,13 +5,10 @@
  * @filename IGraphe.ts
  */
 
-import Arret from "./Arret";
-import Branche from "./Branche";
+import Sommet from "./Sommet";
 
 export default interface IGraphe {
-    readonly arrets: Arret[];
-    readonly branches: Branche[];
-    readonly graphe: Map<Arret, Map<Arret, number>>;
+    readonly arrets: Sommet[];
 
-    findPcc(start: Arret, end: Arret): Arret[];
+    findPcc(start: Sommet, end: Sommet): Array<Sommet>;
 }

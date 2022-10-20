@@ -4,10 +4,10 @@
  * @project backend
  * @filename Branche.ts
  */
-import Arret from "./Arret";
+import Sommet from "./Sommet";
 
 export default interface Branche {
     readonly id: number;
-    readonly connexions: [Arret, Arret];
+    readonly connexions: [Sommet, Sommet];
     readonly time: number;
 }
