@@ -8,6 +8,5 @@
  export default interface Position {
     readonly x: number;
     readonly y: number;
-    readonly name: string;
-    
+
  }

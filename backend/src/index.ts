@@ -17,9 +17,9 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(port, async () => {
     const fileContent = await File.read("./public/data/metro.txt");
     const filePosition = await File.read("./public/data/pospoints.txt");
-    const arrets = await parseFile(fileContent);
-    const graphe = new Graphe(arrets);
     const positions = await getPositions(filePosition);
+    const arrets = await parseFile(fileContent, positions);
+    const graphe = new Graphe(arrets);
     // positions.forEach((s: Position) => {console.log(s.x, s.y, s.name)})
     // console.log(graphe.findPcc(arrets.at(0) as Sommet, arrets.at(8) as Sommet));
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
@@ -29,22 +29,25 @@ app.listen(port, async () => {
 
 /**
  * Méthode permettant de parser un fichier respectant le format donné par le sujet
- * @param {string} content Contenu du fichier à parser
+ * @param content Contenu du fichier à parser
+ * @param positions Hash map des positions des sommets
  * @returns Sommets (arrêts) du futur graphe
  */
-const parseFile: (content: string) => Promise<Array<Sommet>> = async (content: string) => {
+const parseFile: (content: string, positions: Map<string, Position>) => Promise<Array<Sommet>> = async (content: string, positions: Map<string, Position>) => {
 
     const arrets: Array<Sommet> = [];
     content.split('\n').forEach((line) => {
         if (line.startsWith("V")){
             const strTab = line.split(/[;\s]/g).filter((s) => s !== '').map((s) => s.trim());
+            const sommetName = strTab.slice(2, strTab.length - 3).join(" ");
             arrets.push({
                 id: parseInt(strTab[1]),
-                name: strTab.slice(2, strTab.length - 3).join(" "),
+                name: sommetName,
                 ligne: parseInt(strTab[strTab.length - 3]),
                 isEnd: (strTab[strTab.length - 2]).toLowerCase() === "true",
                 branchement: parseInt(strTab[strTab.length - 1]),
-                sommetsAdjacents: new Map<Sommet, number>()
+                sommetsAdjacents: new Map<Sommet, number>(),
+                position: positions.get(sommetName) as Position
             });
         }
         else{
@@ -65,16 +68,14 @@ const parseFile: (content: string) => Promise<Array<Sommet>> = async (content: s
  * @param {string} content Contenu du fichier à parser
  * @returns Liste de coordonnées des sommets
  */
- const getPositions: (content: string) => Promise<Array<Position>> = async (content: string) => {
+ const getPositions: (content: string) => Promise<Map<string, Position>> = async (content: string) => {
 
-    const positions: Array<Position> = [];
+    const positions: Map<string, Position> = new Map();
     content.split('\n').forEach((line) => {
         const strTab = line.split(';').filter((s) => s !== '').map((s) => s.trim());
-        positions.push({
-            x: parseInt(strTab[0]),
-            y: parseInt(strTab[1]),
-            name: strTab[2].replaceAll('@', ' ')
-        });
+        const pos: Position =  {x: parseInt(strTab[0]), y:parseInt(strTab[1])};
+        const name = strTab[2]?.split("@").join(" ");
+        positions.set(name, pos);
     });
     return positions;
 };
