@@ -1,6 +1,6 @@
 # Init
 
-npm install axios
+npm install
 
 # Compile
 
