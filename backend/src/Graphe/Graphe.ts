@@ -36,9 +36,9 @@ export default class Graphe implements IGraphe {
      * Méthode permettant de retrouver le PCC d'un point vers l'autre
      * @param start {Sommet} Start point
      * @param end {Sommet} End point
-     * @returns Une liste du plus court chemin de start vers end
+     * @returns Une liste du plus court chemin de start vers end et son poids
      */
-    findPcc(start: Sommet, end: Sommet): Array<Sommet> {
+    findPcc(start: Sommet, end: Sommet): [Array<Sommet>, number] {
         if (!this.isConnexe())
             throw Error("Graphe n'est pas connexe");
         if (this.hasNegatifPoids())
@@ -66,16 +66,19 @@ export default class Graphe implements IGraphe {
          * @param prev {Map<Sommet, Sommet | null>} HashMap des prédécesseurs
          * @param finishPoint {Sommet} Le sommet de fin
          * @param startPoint {Sommet} Le sommet de départ
+         * @param ds  {Map<Sommet, number>} HashMap des distances
+         * @returns Le PCC et la distance
          */
-        const getSolution = (prev: Map<Sommet, Sommet | null>, finishPoint: Sommet, startPoint: Sommet): Array<Sommet> => {
+        const getSolution = (prev: Map<Sommet, Sommet | null>, finishPoint: Sommet, startPoint: Sommet, ds : Map<Sommet, number>): [Array<Sommet>, number]=> {
             const S : Array<Sommet> = [];
             let u = finishPoint;
+            const poids = ds.get(u) as number;
             if(prev.get(u) || u.id === startPoint.id)
                 while(u){
                     S.push(u);
                     u = prev.get(u) as Sommet;
                 }
-            return S;
+            return [S, poids];
         }
 
         const distances : Map<Sommet, number> = new Map();
@@ -100,7 +103,7 @@ export default class Graphe implements IGraphe {
                 }
             });
         }
-        return getSolution(predecesseurs, end, start);
+        return getSolution(predecesseurs, end, start, distances);
     }
 
     /**

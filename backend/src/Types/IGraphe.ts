@@ -10,5 +10,5 @@ import Sommet from "./Sommet";
 export default interface IGraphe {
     readonly arrets: Sommet[];
 
-    findPcc(start: Sommet, end: Sommet): Array<Sommet>;
+    findPcc(start: Sommet, end: Sommet): [Array<Sommet>, number];
 }

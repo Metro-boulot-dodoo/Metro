@@ -5,12 +5,19 @@ import dotenv from 'dotenv';
 import Graphe from "./Graphe/Graphe";
 import {HTTPResponse} from "./Utils";
 import Position from "./Types/Position";
+import cors from "cors"
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
 let graphe: Graphe;
+
+
+app.use(cors({
+    origin: "*",
+    methods: ["GET"],
+}));
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Express + TypeScript Server');
@@ -19,16 +26,22 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(port, async () => {
     const fileContent = await File.read("./public/data/metro.txt");
     const filePosition = await File.read("./public/data/pospoints.txt");
-    const positions = await getPositions(filePosition);
-    const arrets = await parseFile(fileContent, positions);
+    const filePos = await File.read("./public/data/posGeo.json");
+    //const positions = await getPositions(filePosition);
+    const pos = await getPositionsNewFile(filePos);
+    const arrets = await parseFile(fileContent, pos);
     graphe = new Graphe(arrets);
+    // graphe.arrets.forEach(sommet => {
+    //     if(!sommet.position)
+    //         console.log(sommet.name)
+    // });
     // positions.forEach((s: Position) => {console.log(s.x, s.y, s.name)})
-    // console.log(graphe.findPcc(arrets.at(0) as Sommet, arrets.at(8) as Sommet));
-    console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
+    console.log(graphe.arrets.at(170))
+    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
 
 app.get("/stations", (req:Request, res: Response) => {
-    res.send(JSON.stringify(graphe.getArrets()));
+    res.send(HTTPResponse(200, "Data successfuly found", graphe.getArrets()));
 });
 
 app.get("/station/:id", (req:Request, res: Response) => {
@@ -76,7 +89,7 @@ const parseFile: (content: string, positions: Map<string, Position>) => Promise<
                 isEnd: (strTab[strTab.length - 2]).toLowerCase() === "true",
                 branchement: parseInt(strTab[strTab.length - 1]),
                 sommetsAdjacents: new Map<Sommet, number>(),
-                position: positions.get(sommetName) as Position
+                position: positions.get(sommetName.toLowerCase()) as Position
             });
         }
         else{
@@ -106,5 +119,28 @@ const parseFile: (content: string, positions: Map<string, Position>) => Promise<
         const name = strTab[2]?.split("@").join(" ");
         positions.set(name, pos);
     });
+    return positions;
+};
+
+
+/**
+ * Méthode permettant de récupérer les coordonnées (x,y) des sommets listés dans le fichier pospoints.txt
+ * @param {string} content Contenu du fichier à parser
+ * @returns Liste de coordonnées des sommets
+ */
+ const getPositionsNewFile: (content: string) => Promise<Map<string, Position>> = async (content: string) => {
+    const fileJson = JSON.parse(content);
+    const positions: Map<string, Position> = new Map();
+
+    fileJson.features.forEach((v: any) => {
+        positions.set((v.properties.STATION as string).toLowerCase(), {x: v.geometry.coordinates[0], y: v.geometry.coordinates[1]});
+    });
+
+    // content.split('\n').forEach((line) => {
+    //     const strTab = line.split(';').filter((s) => s !== '').map((s) => s.trim());
+    //     const pos: Position =  {x: parseInt(strTab[0]), y:parseInt(strTab[1])};
+    //     const name = strTab[2]?.split("@").join(" ");
+    //     positions.set(name, pos);
+    // });
     return positions;
 };
