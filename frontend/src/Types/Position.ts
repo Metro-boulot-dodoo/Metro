@@ -1,5 +1,4 @@
 export default interface Position {
-      readonly x: number;
-      readonly y: number;
-
+      readonly lat: number;
+      readonly lng: number;
 }

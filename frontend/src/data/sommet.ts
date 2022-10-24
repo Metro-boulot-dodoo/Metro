@@ -1,15 +1,13 @@
 import Sommet from '../Types/Sommet';
-import axios from "axios";
 import { API_BASE_URL } from '../config/api';
-import Position from '../Types/Position';
+import {JSONResponse} from "../Types/JSONReponse";
 
-type JSONResponse<T> = {
-      statusCode: number,
-      message: string,
-      data?: T,
-      time: Date
-}
-
+/**
+ * Service used to fetch the lowest weight path between two vertexes.
+ * @param a1 Departure vertex
+ * @param a2 Destination vertex
+ * @returns The lowest weight path if service was successful or a promise of an error if not.
+ */
 const getPcc: (a1: Sommet, a2: Sommet) => Promise<[Array<Sommet>, number]> = async (a1: Sommet, a2: Sommet) => {
 
       const res = await fetch(`${API_BASE_URL}/pcc?start=${a1.id}&end=${a2.id}`);
@@ -22,6 +20,10 @@ const getPcc: (a1: Sommet, a2: Sommet) => Promise<[Array<Sommet>, number]> = asy
       return result.data ?? [new Array<Sommet>(), 0];
 }
 
+/**
+ * Service used to fetch every vertex
+ * @returns An array of every vertex in a promise or an error in a promise if service wasn't successful.
+ */
 const getAllSommets: () => Promise<Sommet[]> = async () => {
       const res = await fetch(API_BASE_URL + '/stations');
       const result:JSONResponse<Array<Sommet>> = await res.json();
@@ -33,30 +35,5 @@ const getAllSommets: () => Promise<Sommet[]> = async () => {
       return result.data ?? new Array<Sommet>();
 }
 
-const getStationPosition = async (name: String) => {
-      
-      const Stations: Position[] = Array();
-      const res = await axios({
-            method: 'GET',
-            url: API_BASE_URL + './stations/name=' + name,
-      });
-      res.data.map((val: any) => {
-            let obj: Position = val
-            Stations.push(obj)
-      });
-      return Stations;
-}
 
-const getStationPositionWithId = async (id: Number) => {
-
-      var Station: Position;
-      const res = await axios({
-            method: 'GET',
-            url: API_BASE_URL + './stations/id=' + id,
-      });
-      Station = res.data;
-      return Station;
-}
-
-
-export { getPcc, getAllSommets, getStationPosition, getStationPositionWithId };
+export { getPcc, getAllSommets };

@@ -9,6 +9,12 @@ function App() {
     const [depart, setDepart] = React.useState<Sommet>();
     const [destination, setDestination] = React.useState<Sommet>();
     const [pcc, setPcc] = React.useState<[Array<Sommet>, number]>();
+
+    /**
+     * Function used to set depart or destination. If depart is not set, depart will first be initialised.
+     * Destination will then be initialised. If both are initialised, destination will be replaced.
+     * @param sommet The vertex used to be init.
+     */
     const setDepartOrDestination = (sommet: Sommet) => {
         if (depart === undefined)
             setDepart(sommet);
@@ -16,11 +22,14 @@ function App() {
             setDestination(sommet);
     }
 
+    /**
+     * Function used to clear depart and destination states
+     */
     const clearDD = () => {
         setDepart(undefined);
         setDestination(undefined);
     }
-
+    
     const createRipple = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const button = event.currentTarget;
 
@@ -37,6 +46,10 @@ function App() {
             className={"ripple"}
         />)
     }
+
+    /**
+     * Function used to call fetching service/function
+     */
     const getPath = async () => {
         if (depart === undefined || destination === undefined)
             return;

@@ -26,12 +26,15 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
     }, []);
 
     // const buildSommets = () => sommets.map((sommet) => <Marker key={sommet.id} position={[sommet.position.y, sommet.position.x]} />);
+    /**
+     * Functin used to build all the vertexes on the map
+     */
     const buildSommets = () => {
         return sommets.map((sommet) =>
 
             <Marker
                 key={sommet.id}
-                position={[sommet.position.y, sommet.position.x]}
+                position={[sommet.position.lng, sommet.position.lat]}
                 icon={ICONS.at(sommet.ligne-1)}
                 eventHandlers={{
                     click: (e) => {
@@ -50,17 +53,21 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
         );
     }
 
+    /**
+     * Function used to handle click on a vertex
+     * @param sommet Vertex on which user has clicked
+     */
     const handleSommetClick = (sommet: Sommet) => {
         props.setSommet(sommet);
     };
 
+    /**
+     * Function used to build path between depart and destination vertexes.
+     */
     const buildPath = () => {
-        console.log("heres")
         if (props.path === undefined)
             return;
-        console.log("hre")
         const [pcc, poids] = props.path
-        console.log(pcc)
         const paths: Array<JSX.Element> = [];
         for (let i = 1; i < pcc.length; i++) {
             const sommet = pcc[i];
@@ -69,15 +76,14 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
                 <Polyline
                     key={i}
                     positions={[
-                        [sommet.position.y, sommet.position.x],
-                        [previousSommet.position.y, previousSommet.position.x]
+                        [sommet.position.lng, sommet.position.lat],
+                        [previousSommet.position.lng, previousSommet.position.lat]
                     ]}
                     className={"path-line"}
                     color={"red"}
                 />
             );
         }
-        console.log(paths);
         return paths;
     }
 
