@@ -78,7 +78,7 @@ export default class Graphe implements IGraphe {
                     S.push(u);
                     u = prev.get(u) as Sommet;
                 }
-            return [S, poids];
+            return [S.reverse(), poids];
         }
 
         const distances : Map<Sommet, number> = new Map();
