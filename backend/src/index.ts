@@ -36,7 +36,6 @@ app.listen(port, async () => {
     //         console.log(sommet.name)
     // });
     // positions.forEach((s: Position) => {console.log(s.x, s.y, s.name)})
-    console.log(graphe.arrets.at(170))
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
 

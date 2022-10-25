@@ -25,11 +25,13 @@ export default class Graphe implements IGraphe {
     }
 
     getSommet(id: number): Sommet | undefined {
-        return this.arrets.at(id);
+        if(id<0 || id>=this.arrets.length)
+            return undefined;
+        return this.arrets[id];
     }
 
     private getLastId(): number {
-        return this.arrets.at(this.arrets.length-1)?.id ?? -1;
+        return this.arrets[this.arrets.length-1]?.id ?? -1;
     }
 
     /**
