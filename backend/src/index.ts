@@ -115,7 +115,7 @@ const parseFile: (content: string, positions: Map<string, Position>) => Promise<
     const positions: Map<string, Position> = new Map();
     content.split('\n').forEach((line) => {
         const strTab = line.split(';').filter((s) => s !== '').map((s) => s.trim());
-        const pos: Position =  {x: parseInt(strTab[0]), y:parseInt(strTab[1])};
+        const pos: Position =  {lat: parseInt(strTab[0]), lng:parseInt(strTab[1])};
         const name = strTab[2]?.split("@").join(" ");
         positions.set(name, pos);
     });
@@ -133,7 +133,7 @@ const parseFile: (content: string, positions: Map<string, Position>) => Promise<
     const positions: Map<string, Position> = new Map();
 
     fileJson.features.forEach((v: any) => {
-        positions.set((v.properties.STATION as string).toLowerCase(), {x: v.geometry.coordinates[0], y: v.geometry.coordinates[1]});
+        positions.set((v.properties.STATION as string).toLowerCase(), {lat: v.geometry.coordinates[0], lng: v.geometry.coordinates[1]});
     });
 
     // content.split('\n').forEach((line) => {
