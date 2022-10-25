@@ -2,6 +2,6 @@
 
 npm install
 
-# Compile
+# Run
 
 npm run dev

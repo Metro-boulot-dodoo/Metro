@@ -1,4 +1,5 @@
 export const HTTPResponse = (statusCode: number, message: string, data: any) => {
-    console.timeLog("HTTPResponse", statusCode, message, data);
-    return {"statusCode": statusCode, "message": message, "time": new Date().toISOString(), "data": data}
+    const date = new Date().toISOString();
+    console.log("HTTPResponse", statusCode, message, data, date);
+    return {"statusCode": statusCode, "message": message, "time": date, "data": data}
 }
