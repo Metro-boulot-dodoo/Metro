@@ -77,6 +77,7 @@ app.get("/pcc", (req:Request, res: Response) => {
  */
 const parseFile: (content: string, positions: Map<string, Position>) => Promise<Array<Sommet>> = async (content: string, positions: Map<string, Position>) => {
 
+
     const arrets: Array<Sommet> = [];
     content.split('\n').forEach((line) => {
         if (line.startsWith("V")){
@@ -85,7 +86,7 @@ const parseFile: (content: string, positions: Map<string, Position>) => Promise<
             arrets.push({
                 id: parseInt(strTab[1]),
                 name: sommetName,
-                ligne: parseInt(strTab[strTab.length - 3]),
+                ligne: strTab[strTab.length - 3],
                 isEnd: (strTab[strTab.length - 2]).toLowerCase() === "true",
                 branchement: parseInt(strTab[strTab.length - 1]),
                 sommetsAdjacents: new Map<Sommet, number>(),

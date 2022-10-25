@@ -5,12 +5,11 @@ import {LatLngTuple} from "leaflet";
 import 'leaflet/dist/leaflet.css';
 import Sommet from "../../Types/Sommet";
 import {getAllSommets} from "../../data/sommet";
-import {l1Icon, l2Icon, l7Icon, l7bIcon, l11Icon, l10Icon, l12Icon, l13Icon, l14Icon, l3bIcon, l3Icon, l4Icon, l6Icon, l8Icon, l9Icon, l5Icon } from "../../components/LineIcon";
+import {Lines} from "../../components/Lines";
 
 const zoom:number = 13.45;
 
 const mapCenteringPos:LatLngTuple = [48.864211, 2.380104];
-const ICONS = [l1Icon, l2Icon, l3Icon, l4Icon, l5Icon, l6Icon, l7Icon, l8Icon, l9Icon, l10Icon, l11Icon, l12Icon, l13Icon, l14Icon];
 
 interface MapProps {
     setSommet: (sommet: Sommet) => void,
@@ -35,9 +34,9 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
             <Marker
                 key={sommet.id}
                 position={[sommet.position.lng, sommet.position.lat]}
-                icon={ICONS.at(sommet.ligne-1)}
+                icon={Lines[sommet.ligne].icon}
                 eventHandlers={{
-                    click: (e) => {
+                    click: () => {
                         handleSommetClick(sommet);
                     },
                     mouseover: (e) => {
@@ -80,7 +79,7 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
                         [previousSommet.position.lng, previousSommet.position.lat]
                     ]}
                     className={"path-line"}
-                    color={"red"}
+                    color={Lines[sommet.ligne].couleur}
                 />
             );
         }
