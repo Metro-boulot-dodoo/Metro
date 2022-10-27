@@ -34,7 +34,7 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
             <Marker
                 key={sommet.id}
                 position={[sommet.position.lng, sommet.position.lat]}
-                icon={Lines[sommet.ligne].icon}
+                icon={sommet.isEnd ?  Lines[sommet.ligne].mainIcon : Lines[sommet.ligne].secondaryIcon}
                 eventHandlers={{
                     click: () => {
                         handleSommetClick(sommet);
@@ -79,10 +79,16 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
                         [previousSommet.position.lng, previousSommet.position.lat]
                     ]}
                     className={"path-line"}
-                    color={Lines[sommet.ligne].couleur}
+                    color={"#990000"}
                 />
             );
         }
+        return paths;
+    }
+    const buildLinePath = () => {
+        const paths: Array<JSX.Element> = [];
+        if (sommets === undefined)
+            return paths;
         return paths;
     }
 
@@ -99,7 +105,9 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                     />
-                    {buildSommets()}
+
+                    {sommets ? buildSommets() : null}
+                    {sommets ? buildLinePath() : null}
                     {props.path ? buildPath() : null}
                 </MapContainer>
             </div>
