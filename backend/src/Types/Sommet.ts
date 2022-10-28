@@ -12,6 +12,6 @@ export default interface Sommet {
     readonly ligne: string;
     readonly isEnd: boolean;
     readonly branchement: number;
-    sommetsAdjacents: Map<Sommet, number>;
+    readonly sommetsAdjacents: Map<Sommet, number>;
     readonly position: Position;
 }
