@@ -11,4 +11,5 @@ export default interface IGraphe {
     readonly arrets: Sommet[];
 
     findPcc(start: Sommet, end: Sommet): [Array<Sommet>, number];
+    getACPM(): [Array<Sommet>, number];
 }

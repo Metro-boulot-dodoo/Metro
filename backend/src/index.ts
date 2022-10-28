@@ -31,6 +31,8 @@ app.listen(port, async () => {
     const pos = await getPositionsNewFile(filePos);
     const arrets = await parseFile(fileContent, pos);
     graphe = new Graphe(arrets);
+    graphe.getACPM()
+    
     // graphe.arrets.forEach(sommet => {
     //     if(!sommet.position)
     //         console.log(sommet.name)

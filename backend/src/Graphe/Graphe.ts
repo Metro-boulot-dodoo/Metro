@@ -4,7 +4,6 @@
  * @project backend
  * @filename Graphe.ts
  */
-
 import IGraphe from "../Types/IGraphe";
 import Sommet from "../Types/Sommet";
 
@@ -143,4 +142,145 @@ export default class Graphe implements IGraphe {
         sommet.sommetsAdjacents.forEach((item, key) => !visited.has(key) ? this.DFS(key, visited) : null);
     }
 
-}
+    /**
+     * Méthode permettant de retrouver l'arbre couvran de poids minimum du graphe
+     * @returns Une liste du plus court chemin de start vers end et son poids
+     */
+     getACPM(): [Array<Sommet>, number] {
+        if (!this.isConnexe()){
+            throw Error("Graphe n'est pas connexe");
+        }
+
+        const SEPARATOR_ARETE_ID:string = ":"
+
+        /**
+         * Fonction permettant d'obtenir la map des arêtes 
+         * @param sommets {Array<Sommet>} Liste des sommets d'où extraire la map
+         * @returns la map contenant les arêtes
+         */
+         const getAretesMap = (sommets: Array<Sommet>): Map<string, number> => {
+
+            const aretesMap: Map<string, number> = new Map();
+            let areteId:string;
+            sommets.forEach(sommet => {
+                sommet.sommetsAdjacents.forEach((weight, sommetAdjacent) => {
+                    areteId = sommet.id.toString() + SEPARATOR_ARETE_ID + sommetAdjacent.id.toString();
+                    if(!inMap(areteId, aretesMap))
+                        aretesMap.set(areteId, weight);
+                })
+            })
+            
+           return aretesMap;
+        }
+
+        /**
+         * Fonction vérifiant si une arête est dans la map
+         * @param areteId {string} identifiant de l'arête à chercher
+         * @param aretesMap {Map<string, number>} map où a lieu la verification
+         * @returns true si l'identifiant de l'arête est dans la map, false sinon
+         */
+        const inMap = (areteId: string, aretesMap: Map<string, number>): boolean => {
+            return aretesMap.has(areteId) || aretesMap.has(areteId.split(SEPARATOR_ARETE_ID).reverse().join(SEPARATOR_ARETE_ID));
+        }
+
+        /**
+         * Fonction permettant d'executer l'algorithme de Kruskal et obtenir l'ACPM ainsi que son poids.
+         * @param aretesMap {Map<string, number>} map d'arêtes sur laquelle s'execute l'algorithme
+         * @returns l'ACPM et son poids
+         */
+        const kruskal = (aretesMap: Map<string, number>): [Array<Sommet>, number] => {
+
+            /**
+             * Fonction récursive vérifiant si le graphe a un cycle
+             * @param sommetId {Sommet} Sommet courant à vérifier
+             * @param visited {Map<Sommet, boolean>} Map des sommets visités
+             * @param parent {Sommet} Sommet parent du sommet courant
+             * @returns true si le graphe a un cycle, false sinon
+             */
+             const cycleChecker = (sommet: Sommet, visited: Map<Sommet,boolean>, parent: number): boolean => {
+                // Marquer le sommet courant comme visité
+                visited.set(sommet, true);
+                let result = false;
+                sommet.sommetsAdjacents.forEach((weight, sommetAdjacent) => {
+                    // Si le sommet adjacent n'a pas été visité, on le visite
+                    if(!visited.has(sommetAdjacent)){
+                        result = cycleChecker(sommetAdjacent, visited, sommet.id);
+                    }
+                    // Si le sommet adjacent a été visité et qu'il n'est pas le parent du sommet courant, alors le graphe est cyclique
+                    else if(sommetAdjacent.id !== parent){
+                        result = true;
+                    }
+                })
+                return result;
+            }
+
+            /**
+             * Fonction d'appel d'initialisation de la fonction récursive vérifiant si le graphe a un cycle
+             * @param sommets {Array<Sommet>} Sommet courant à vérifier
+             * @returns true si le graphe est cyclique, false sinon
+             */
+            const hasCycle = (sommets: Array<Sommet>): boolean => {
+                const visited: Map<Sommet,boolean> = new Map();
+                sommets.forEach(sommet => !visited.has(sommet) ? cycleChecker(sommet, visited, -1) : null);
+                return visited.size != sommets.length;
+            }
+
+            const ACPM: Array<Sommet> = [];
+            let poids: number = 0;
+
+            for (let [areteId, weight] of aretesMap) {
+                
+                if(ACPM.length === this.arrets.length - 1){
+                    break;
+                }
+                let sommetA: Sommet = this.arrets.find(sommet => sommet.id === parseInt(areteId.split(SEPARATOR_ARETE_ID)[0])) as Sommet;
+                let sommetB: Sommet = this.arrets.find(sommet => sommet.id === parseInt(areteId.split(SEPARATOR_ARETE_ID)[1])) as Sommet;
+                
+                // Ne pas push si sommetA est deja dans ACPM
+                if(!ACPM.includes(sommetA)){
+                    sommetA.sommetsAdjacents.clear();
+                    ACPM.push(sommetA);
+                }
+                // idem pour sommetB
+                if(!ACPM.includes(sommetB)){
+                    sommetB.sommetsAdjacents.clear();
+                    ACPM.push(sommetB);
+                }
+                // Ajout des nouveaux sommets adjacents
+                sommetA.sommetsAdjacents.set(sommetB, weight);
+                sommetB.sommetsAdjacents.set(sommetA, weight);
+                poids += weight;
+                // Si le graphe est cyclique, on retire le sommet ajouté
+                if(hasCycle(ACPM)){
+                    sommetA.sommetsAdjacents.delete(sommetB);
+                    sommetB.sommetsAdjacents.delete(sommetA);
+                    ACPM.pop();
+                    ACPM.pop();
+                    poids -= weight;
+                }
+            }
+            // log pertinent value
+            // log size
+            console.log("ACPM size: ", ACPM.length, "should be ", this.arrets.length);
+            // log weight
+            console.log("ACPM weight: ", poids);
+            // log number of edges
+            console.log("ACPM number of edges: ", getAretesMap(ACPM).size, "should be ", this.arrets.length - 1);
+            // log has cycle
+            console.log("ACPM has cycle: ", hasCycle(ACPM), "should be false");
+            console.log("Poids: ", poids);
+
+            return [ACPM, poids];
+        } 
+        const aretesMapSorted = new Map([...getAretesMap(this.arrets)].sort((a, b) => a[1] - b[1]));
+        return kruskal(aretesMapSorted);
+        // Erreurs :
+        // 375 sommet au lieu de 376
+        // 345 arêtes au lieu de 375
+        // D'après Maxime sur discord, le poids devrait être d'un peu plus de 20300, il est de 15954
+        // Causes probable : 
+        // 1 : Condition d'arrêt incorrecte : ACPM.length === this.arrets.length - 1 -> devrait comparé le nombre d'arêtes de ACPM avec le nombre de sommet du graphe
+        // 2 : Fonction hasCycle possiblement incorrecte.
+        // 3 ; Possible erreur dans la création et le push des sommets, possible que
+    } 
+ }
