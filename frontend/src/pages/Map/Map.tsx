@@ -108,6 +108,7 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
 
                     {sommets ? buildSommets() : null}
                     {sommets ? buildLinePath() : null}
+
                     {props.path ? buildPath() : null}
                 </MapContainer>
             </div>

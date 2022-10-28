@@ -5,6 +5,45 @@
     gap: 2em;
     padding: 2rem;
 }
+.path-description-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 400;
+    background-color: #fff;
+    border-radius: 1rem;
+    margin: 1rem;
+}
+.path-description-container p {
+    font-weight: 600;
+    color: #000;
+    background-color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    margin: 0 !important;
+}
+
+.map-path-description-container {
+    position: relative;
+}
+
+.path-explication-sommet {
+    position: relative;
+}
+.path-explication-sommet-ligne {
+    position: absolute;
+    width: 2rem;
+    right: 0;
+    top: 0;
+    opacity: 30%;
+}
+
+.path-explication-container {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
 .input-container input[type="select"] {
     border: 1px solid transparent;

@@ -49,7 +49,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l1s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l1
     },
     "2": {
         couleur: "#0065AE",
@@ -64,7 +65,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l2s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l2
     },
     "3": {
         couleur: "#9F971A",
@@ -79,7 +81,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l3s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l3
     },
     "3bis": {
         couleur: "#99D4DE",
@@ -94,7 +97,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l3bs,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l3b
     },
     "4": {
         couleur: "#BE418D",
@@ -109,7 +113,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l4s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l4
     },
     "5": {
         couleur: "#F19043",
@@ -124,7 +129,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l5s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l5
     },
     "6": {
         couleur: "#84C28E",
@@ -139,7 +145,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l6s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l6
     },
     "7": {
         couleur: "#F2A4B7",
@@ -154,7 +161,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l7s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l7
     },
     "7bis": {
         couleur: "#84C28E",
@@ -169,7 +177,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l7bs,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l7b
     },
     "8": {
         couleur: "#CDACCF",
@@ -184,7 +193,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l8s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l8
     },
     "9": {
         couleur: "#D5C900",
@@ -199,7 +209,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l9s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l9
     },
     "10": {
         couleur: "#E4B327",
@@ -214,7 +225,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l10s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l10
     },
     "11": {
         couleur: "#8C5E24",
@@ -229,7 +241,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l11s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l11
     },
     "12": {
         couleur: "#007E49",
@@ -244,7 +257,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l12s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l12
     },
     "13": {
         couleur: "#99D4DE",
@@ -259,7 +273,8 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l13s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l13
     },
     "14": {
         couleur: "#622280",
@@ -274,6 +289,7 @@ export const Lines: Record<string, Ligne> = {
             iconRetinaUrl: l14s,
             popupAnchor: [-0, -0],
             iconSize: [12, 16.5],
-        })
+        }),
+        img : l14
     }
 }

@@ -3,6 +3,8 @@ import {Map} from "./pages/Map/Map";
 import React from "react";
 import Sommet from "./Types/Sommet";
 import {getPcc} from "./data/sommet";
+import {Lines} from "./components/Lines";
+import {fmtMSS} from "./utils/utils";
 
 function App() {
 
@@ -28,27 +30,11 @@ function App() {
     const clearDD = () => {
         setDepart(undefined);
         setDestination(undefined);
-    }
-    
-    const createRipple = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        const button = event.currentTarget;
-
-        const diameter = Math.max(button.clientWidth, button.clientHeight);
-        const radius = diameter / 2;
-
-        return (<span
-            style={{
-                width: radius,
-                height: radius,
-                left: `${event.clientX - button.offsetLeft - radius}px`,
-                top: `${event.clientY - button.offsetTop - radius}px`
-            }}
-            className={"ripple"}
-        />)
+        setPcc(undefined);
     }
 
     /**
-     * Function used to call fetching service/function
+     * Function used to call pcc fetching service
      */
     const getPath = async () => {
         if (depart === undefined || destination === undefined)
@@ -56,6 +42,34 @@ function App() {
         getPcc(depart, destination)
             .then((pcc) => setPcc(pcc))
             .catch((error) => console.log(error));
+    }
+
+
+    const buildPathExplications = (sommets: Array<Sommet>, poids: number) => {
+        let ligne = sommets[0].ligne;
+        let tour = 0;
+
+        const jsx = sommets.map((sommet) => {
+            let ligneChanged = false;
+            if (sommet.ligne !== ligne){
+                ligneChanged = true;
+                ligne = sommet.ligne;
+            }
+            return(
+                <div className={"path-explication-sommet"}>
+                    <p className={"path-explication-sommet-name"}>{sommet.name}</p>
+                    {ligneChanged || tour++ === 0 ? <img src={Lines[sommet.ligne].img} className={"path-explication-sommet-ligne"} alt={sommet.ligne}/> : null}
+                </div>
+            )
+        })
+        return (
+            <>
+                <div className={"path-explication-container"}>
+                    {jsx}
+                </div>
+                <p className={"path-explication-poids"}>Temps total : {fmtMSS(poids)} min</p>
+            </>
+        );
     }
 
     return (
@@ -66,7 +80,13 @@ function App() {
                 <button onClick={getPath}>Recherche</button>
                 <button onClick={clearDD}>❌</button>
             </div>
-            <Map setSommet={setDepartOrDestination} path={pcc}/>
+            <div className="map-path-description-container">
+                <Map setSommet={setDepartOrDestination} path={pcc}/>
+                <div className="path-description-container">
+                    {pcc ? buildPathExplications(pcc[0], pcc[1]) : null}
+                </div>
+            </div>
+
         </>
     )
 }
