@@ -2,5 +2,6 @@ import L from "leaflet";
 
 export default interface Ligne {
     couleur: string,
-    icon: L.Icon
+    mainIcon: L.Icon,
+    secondaryIcon?: L.Icon,
 }
