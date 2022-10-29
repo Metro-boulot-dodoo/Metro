@@ -15,7 +15,7 @@
       * @param arrets {Array<Sommet>} Liste des sommets du graphe
       */
      constructor(arrets: Sommet[]) {
-         this.arrets = arrets;
+         this.arrets = arrets;;
      }
  
      readonly arrets: Sommet[];
@@ -129,7 +129,7 @@
       */
      private isConnexe() : boolean {
          const visited: Map<Sommet,boolean> = new Map();
-         this.arrets.forEach(sommet => !visited.has(sommet) ? this.DFS(sommet, visited) : null);
+         this.DFS(this.arrets[0], visited); 
          return visited.size === this.arrets.length;
      }
  
@@ -200,18 +200,19 @@
               const cycleChecker = (sommet: Sommet, visited: Map<Sommet,boolean>, parent: number): boolean => {
                  // Marquer le sommet courant comme visité
                  visited.set(sommet, true);
-                 let result = false;
-                 sommet.sommetsAdjacents.forEach((weight, sommetAdjacent) => {
-                     // Si le sommet adjacent n'a pas été visité, on le visite
-                     if(!visited.has(sommetAdjacent)){
-                         result = cycleChecker(sommetAdjacent, visited, sommet.id);
-                     }
-                     // Si le sommet adjacent a été visité et qu'il n'est pas le parent du sommet courant, alors le graphe est cyclique
-                     else if(sommetAdjacent.id !== parent){
-                         result = true;
-                     }
-                 })
-                 return result;
+                 let result = false; 
+                for (const [voisin, poids] of sommet.sommetsAdjacents) {
+                    // Si le sommet n'a pas été visité, on le visite
+                    if(!visited.get(voisin)){
+                        if(cycleChecker(voisin, visited, sommet.id))
+                            return true;
+                    }
+                    // Si l'un des voisin a été visité et qu'il n'est pas le parent du sommet courant, un cycle est présent
+                    else if(parent != voisin.id){
+                        result = true;
+                    }
+                }
+                return result;
              }
  
              /**
@@ -221,10 +222,40 @@
               */
              const hasCycle = (graphe: Graphe): boolean => {
                  const visited: Map<Sommet,boolean> = new Map();
-                 graphe.arrets.forEach(sommet => !visited.has(sommet) ? cycleChecker(sommet, visited, -1) : null);
-                 return visited.size != graphe.arrets.length;
+                 graphe.arrets.forEach( sommet => visited.set(sommet, false));
+                for (const sommet of graphe.arrets)
+                    if(!visited.get(sommet))
+                        if(cycleChecker(sommet, visited, -1))
+                            return true;
+                return false;
              }
- 
+
+             /**
+              * Fonction retournant une liste de sommet dans l'ordre d'un parcours en profondeur
+              * @param graphe {Graphe} Arbre couvrant de poids minimum
+              * @returns liste de sommets ordonnées du chemin formant l'ACPM
+              */
+              const getOrderedMST = (graphe: Graphe): Array<Sommet> => {
+                const ordoredMST: Array<Sommet> = [];
+                AddingThroughDFS(graphe.arrets[0], ordoredMST);
+                return ordoredMST;
+            }
+
+            /**
+             * Fonction ajoutant à une liste les sommets dans l'ordre d'un parcours en profondeur
+             * @param sommet {Sommet} sommet à ajouter
+             * @param ordoredMST {Array<Sommet>} liste à modifier
+             */
+            const AddingThroughDFS = (sommet: Sommet, ordoredMST: Array<Sommet>) => {
+                ordoredMST.push(sommet);
+                sommet.sommetsAdjacents.forEach((weight, voisin) => {
+                    if(!ordoredMST.includes(voisin)){
+                        AddingThroughDFS(voisin, ordoredMST)
+                        ordoredMST.push(sommet);
+                    }
+                })
+            } 
+
              // Récupération des sommets du graphe principal
              const ACPM = new Graphe(
                  JSON.parse(JSON.stringify(this.arrets)).map((sommet: Sommet) => {
@@ -232,11 +263,12 @@
                          sommetsAdjacents: new Map<Sommet, number>()
                      } as Sommet
              }));
-             let poids: number = 0;
- 
+            let poids: number = 0;
+
+            // Pour chacune des arêtes (par ordre croissant)
              for (let [areteId, weight] of aretesMap) {  
-                 
-                if(getAretesMap(ACPM).size === (ACPM.arrets.length - 1) && ACPM.isConnexe()){
+                 // Si le nombre d'arêtes dans notre ACPM est égal au nombre de sommet -1 du graphe et si l'ACPM est connexe
+                if(getAretesMap(ACPM).size === (ACPM.arrets.length - 1)){
                     break;
                 }
                  // Récupération des sommets à partir de l'identifiant de l'arête
@@ -251,15 +283,11 @@
                      sommetA.sommetsAdjacents.delete(sommetB);
                      sommetB.sommetsAdjacents.delete(sommetA);
                      aretesMap.delete(areteId);
-                 }else{ // Sinon on incrémente le poids
-                     poids += weight;
+                 }else{ 
+                    poids += weight;
                  }
              }
-             assert(ACPM.arrets.length === this.arrets.length, "Le nombre de sommets de l'ACPM n'est pas égal au nombre de sommets du graphe");
-             assert(getAretesMap(ACPM).size === (ACPM.arrets.length - 1), "Le nombre d'arêtes de l'ACPM n'est pas égal au nombre de sommets - 1");
-             assert(hasCycle(ACPM) === false, "Le graphe est cyclique");            
-             console.log("PRD: sommets: ", this.arrets.length, " arrêtes, ", this.arrets.length - 1, " poids,  20362 connexe: true cycle: false");
-             console.log("RES: sommets: ", ACPM.arrets.length, " arrêtes, ", getAretesMap(ACPM).size, " poids, ", poids, "connexe:", ACPM.isConnexe(), "cycle:", hasCycle(ACPM));
+             //return [getOrderedMST(ACPM), poids]; 
              return [ACPM.arrets, poids]; 
          } 
          const aretesMapSorted = new Map([...getAretesMap(this)].sort((a, b) => a[1] - b[1]));
