@@ -1,22 +1,23 @@
 import "./style/Map.css"
 import React from "react";
-import {MapContainer, TileLayer, Marker, Popup, Polyline} from "react-leaflet";
-import {LatLngTuple} from "leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import { LatLngTuple } from "leaflet";
 import 'leaflet/dist/leaflet.css';
 import Sommet from "../../Types/Sommet";
-import {getAllSommets} from "../../data/sommet";
-import {Lines} from "../../components/Lines";
+import { getAllSommets } from "../../data/sommet";
+import { Lines } from "../../components/Lines";
 
-const zoom:number = 13.45;
+const zoom: number = 13.45;
 
-const mapCenteringPos:LatLngTuple = [48.864211, 2.380104];
+const mapCenteringPos: LatLngTuple = [48.864211, 2.380104];
 
 interface MapProps {
     setSommet: (sommet: Sommet) => void,
     path: [Array<Sommet>, number] | undefined
 }
 
-export const Map: React.FC<MapProps> = (props): JSX.Element  => {
+export const Map: React.FC<MapProps> = (props): JSX.Element => {
+
     const [sommets, setSommets] = React.useState<Array<Sommet>>([]);
     React.useEffect(() => {
         getAllSommets()
@@ -34,7 +35,7 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
             <Marker
                 key={sommet.id}
                 position={[sommet.position.lng, sommet.position.lat]}
-                icon={sommet.isEnd ?  Lines[sommet.ligne].mainIcon : Lines[sommet.ligne].secondaryIcon}
+                icon={sommet.isEnd ? Lines[sommet.ligne].mainIcon : Lines[sommet.ligne].secondaryIcon}
                 eventHandlers={{
                     click: () => {
                         handleSommetClick(sommet);
@@ -92,14 +93,13 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
         return paths;
     }
 
-
     return (
         <>
             <div className="mapContainer">
                 <MapContainer id="mapId"
-                              center={mapCenteringPos}
-                              zoom={zoom}
-                              style={{ height: '100vh', width: '100wh' }}
+                    center={mapCenteringPos}
+                    zoom={zoom}
+                    style={{ height: '100vh', width: '100wh' }}
                 >
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
