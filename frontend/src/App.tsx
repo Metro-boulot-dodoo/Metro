@@ -2,7 +2,7 @@ import './css/App.css'
 import {MapPage} from "./pages/Map/MapPage";
 import React, {ChangeEvent} from "react";
 import Sommet from "./Types/Sommet";
-import {getAllSommets, getPcc} from "./data/sommet";
+import {getAllSommets, getPcc, getACPM} from "./data/sommet";
 import {Lines} from "./components/Lines";
 import {fmtMSS} from "./utils/utils";
 
@@ -12,6 +12,7 @@ function App() {
     const [destination, setDestination] = React.useState<Sommet>();
     const [pcc, setPcc] = React.useState<[Array<Sommet>, number]>();
     const [sommets, setSommets] = React.useState<Array<Sommet>>([]);
+    const [ACPM, setACPM] = React.useState<Array<Sommet>>([]);
     const [adjacents, setAdjacents] = React.useState<Sommet[][]>(new Array<Sommet[]>());
 
     React.useEffect(() => {
@@ -52,6 +53,12 @@ function App() {
             return;
         getPcc(depart, destination)
             .then((pcc) => setPcc(pcc))
+            .catch((error) => console.log(error));
+    }
+
+    const getPathFromACPM = async () => {
+        getACPM()
+            .then((acpm) => setACPM(acpm))
             .catch((error) => console.log(error));
     }
 
@@ -110,6 +117,7 @@ function App() {
                 </select>
                 <button onClick={getPath}>Recherche</button>
                 <button onClick={clearDD}>❌</button>
+                <button onClick={getPathFromACPM}>ACPM</button>
             </div>
             <div className="map-path-description-container">
                 <MapPage setSommet={setDepartOrDestination} path={pcc} sommets={sommets} adjacents={adjacents}/>
