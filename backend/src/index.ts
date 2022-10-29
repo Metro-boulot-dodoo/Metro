@@ -68,6 +68,14 @@ app.get("/pcc", (req:Request, res: Response) => {
         );
 });
 
+app.get("/acpm", (req:Request, res: Response) => {
+    res.status(200)
+        .send(
+            HTTPResponse(200,
+            "Done",
+            graphe.getACPM())
+        );
+});
 
 
 /**

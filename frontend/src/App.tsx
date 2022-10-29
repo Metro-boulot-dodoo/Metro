@@ -2,13 +2,13 @@ import './css/App.css'
 import {Map} from "./pages/Map/Map";
 import React from "react";
 import Sommet from "./Types/Sommet";
-import {getPcc} from "./data/sommet";
+import {getPcc, getACPM} from "./data/sommet";
 
 function App() {
 
     const [depart, setDepart] = React.useState<Sommet>();
     const [destination, setDestination] = React.useState<Sommet>();
-    const [pcc, setPcc] = React.useState<[Array<Sommet>, number]>();
+    const [pathToBuild, setPathToBuild] = React.useState<[Array<Sommet>, number]>();
 
     /**
      * Function used to set depart or destination. If depart is not set, depart will first be initialised.
@@ -50,11 +50,20 @@ function App() {
     /**
      * Function used to call fetching service/function
      */
-    const getPath = async () => {
+    const getPathFromPCC = async () => {
         if (depart === undefined || destination === undefined)
             return;
         getPcc(depart, destination)
-            .then((pcc) => setPcc(pcc))
+            .then((pcc) => setPathToBuild(pcc))
+            .catch((error) => console.log(error));
+    }
+
+    /**
+     * #TODO
+     */
+    const getPathFromACPM = async () => {
+        getACPM()
+            .then((acpm) => setPathToBuild(acpm))
             .catch((error) => console.log(error));
     }
 
@@ -63,12 +72,18 @@ function App() {
             <div className="input-container">
                 <input type="select" value={depart?.name ?? ""} onChange={() => {}}/>
                 <input type="select" value={destination?.name ?? ""} onChange={() => {}}/>
-                <button onClick={getPath}>Recherche</button>
+                <button onClick={getPathFromPCC}>Recherche</button>
                 <button onClick={clearDD}>❌</button>
+                <button onClick={getPathFromACPM}>ACPM</button>
             </div>
-            <Map setSommet={setDepartOrDestination} path={pcc}/>
+            <Map setSommet={setDepartOrDestination} path={pathToBuild}/>
         </>
     )
+    // appel du back
+    // recuperation du la liste de sommet
+    // aller dans map
+    // getPaths ->
+    // set attribut local de pcc
 }
 
 export default App

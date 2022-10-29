@@ -287,8 +287,7 @@
                     poids += weight;
                  }
              }
-             //return [getOrderedMST(ACPM), poids]; 
-             return [ACPM.arrets, poids]; 
+             return [getOrderedMST(ACPM), poids]; 
          } 
          const aretesMapSorted = new Map([...getAretesMap(this)].sort((a, b) => a[1] - b[1]));
          return kruskal(aretesMapSorted);

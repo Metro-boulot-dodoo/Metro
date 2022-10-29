@@ -66,11 +66,11 @@ export const Map: React.FC<MapProps> = (props): JSX.Element  => {
     const buildPath = () => {
         if (props.path === undefined)
             return;
-        const [pcc, poids] = props.path
+        const [pathToBuild, poids] = props.path
         const paths: Array<JSX.Element> = [];
-        for (let i = 1; i < pcc.length; i++) {
-            const sommet = pcc[i];
-            const previousSommet = pcc[i - 1];
+        for (let i = 1; i < pathToBuild.length; i++) {
+            const sommet = pathToBuild[i];
+            const previousSommet = pathToBuild[i - 1];
             paths.push(
                 <Polyline
                     key={i}
