@@ -59,7 +59,7 @@ function App() {
     }
 
     /**
-     * #TODO
+     * Function used to get MST weight and path by fetching service/function
      */
     const getPathFromACPM = async () => {
         getACPM()
@@ -79,11 +79,6 @@ function App() {
             <Map setSommet={setDepartOrDestination} path={pathToBuild}/>
         </>
     )
-    // appel du back
-    // recuperation du la liste de sommet
-    // aller dans map
-    // getPaths ->
-    // set attribut local de pcc
 }
 
 export default App
