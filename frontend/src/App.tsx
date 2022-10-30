@@ -1,5 +1,5 @@
 import './css/App.css'
-import {Map} from "./pages/Map/Map";
+import {MapPage} from "./pages/Map/MapPage";
 import React from "react";
 import Sommet from "./Types/Sommet";
 import {getPcc} from "./data/sommet";
@@ -56,7 +56,7 @@ function App() {
                 ligne = sommet.ligne;
             }
             return(
-                <div className={"path-explication-sommet"}>
+                <div key={tour} className={"path-explication-sommet"}>
                     <p className={"path-explication-sommet-name"}>{sommet.name}</p>
                     {ligneChanged || tour++ === 0 ? <img src={Lines[sommet.ligne].img} className={"path-explication-sommet-ligne"} alt={sommet.ligne}/> : null}
                 </div>
@@ -81,7 +81,7 @@ function App() {
                 <button onClick={clearDD}>❌</button>
             </div>
             <div className="map-path-description-container">
-                <Map setSommet={setDepartOrDestination} path={pcc}/>
+                <MapPage setSommet={setDepartOrDestination} path={pcc}/>
                 <div className="path-description-container">
                     {pcc ? buildPathExplications(pcc[0], pcc[1]) : null}
                 </div>

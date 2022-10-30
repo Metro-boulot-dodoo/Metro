@@ -22,19 +22,22 @@ const getPcc: (a1: Sommet, a2: Sommet) => Promise<[Array<Sommet>, number]> = asy
 
 /**
  * Service used to fetch every vertex
- * @returns An array of every vertex in a promise or an error in a promise if service wasn't successful.
+ * @returns An object with a list of vertexes and a list of vertexes successors in a promise
+ * or an error in a promise if service wasn't successful.
  */
-const getAllSommets: () => Promise<Sommet[]> = async () => {
+const getAllSommets = async () => {
       const res = await fetch(API_BASE_URL + '/stations');
-      const result: JSONResponse<Array<Sommet>> = await res.json();
-      
+      const result: JSONResponse<{"sommets": Sommet[], "adjacents" : Sommet[][]}> = await res.json();
+
       if (!res.ok)
             return Promise.reject(new Error("Could not fetch data"));
 
       if (result.statusCode !== 200)
             return Promise.reject(new Error("Error when fetching data"));
+      if (!result.data)
+            return Promise.reject(new Error("Data is null"));
 
-      return result.data ?? new Array<Sommet>();
+      return result.data;
 }
 
 export { getPcc, getAllSommets };
