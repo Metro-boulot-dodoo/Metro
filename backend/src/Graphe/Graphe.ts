@@ -155,17 +155,18 @@
  
          /**
           * Fonction permettant d'obtenir la map des arêtes d'un graphe
-          * @param sommets {Graphe} Graphe d'où extraire la map d'arêtes
+          * @param graphe {Graphe} Graphe d'où extraire la map d'arêtes
           * @returns la map contenant les arêtes avec leurs poids associés
           */
           const getAretesMap = (graphe: Graphe): Map<string, number> => {
  
-             const aretesMap: Map<string, number> = new Map();
+             const aretesMap: Map<string, number> = new Map<string, number>();
              graphe.arrets.forEach(sommet => {
                  sommet.sommetsAdjacents.forEach((weight, sommetAdjacent) => {
                      // Met en forme l'identifiant d'arête sous la forme "idSommet1:idSommet2"
                      const areteId:string = sommet.id.toString() + SEPARATOR_ARETE_ID + sommetAdjacent.id.toString();
-                     if(!inMap(areteId, aretesMap))
+                     // Ajoute l'arête si elle n'est pas présente
+                     if(!isInMap(areteId, aretesMap))
                          aretesMap.set(areteId, weight);
                  })
              })
@@ -173,19 +174,19 @@
          }
  
          /**
-          * Fonction vérifiant si une arête est dans une map sous ecriture inverse 
-          * ("idSommet1:idSommet2" et "idSommet2:idSommet1" sont identiques) ou identique         * 
+          * Fonction vérifiant si une arête est dans une map quelque soit l'ordre de ses sommets dans l'identifiant 
+          * ("idSommet1:idSommet2" et "idSommet2:idSommet1" sont identiques) 
           * @param areteId {string} identifiant de l'arête à chercher
           * @param aretesMap {Map<string, number>} map où a lieu la verification
           * @returns true si l'identifiant de l'arête est dans la map, false sinon
           */
-         const inMap = (areteId: string, aretesMap: Map<string, number>): boolean => {
+         const isInMap = (areteId: string, aretesMap: Map<string, number>): boolean => {
              return aretesMap.has(areteId) || aretesMap.has(areteId.split(SEPARATOR_ARETE_ID).reverse().join(SEPARATOR_ARETE_ID));
          }
  
          /**
           * Fonction permettant d'executer l'algorithme de Kruskal et obtenir l'ACPM ainsi que son poids.
-          * @param aretesMap {Map<string, number>} map d'arêtes sur laquelle se déroule l'algorithme
+          * @param aretesMap {Map<string, number>} map d'arêtes trié sur laquelle se déroule l'algorithme
           * @returns l'ACPM (arbre couvrant de poids minimum) et son poids
           */
          const kruskal = (aretesMap: Map<string, number>): [Array<Sommet>, number] => {
@@ -265,8 +266,7 @@
              }));
             let poids: number = 0;
 
-            // Pour chacune des arêtes (par ordre croissant)
-             for (let [areteId, weight] of aretesMap) {  
+            for (let [areteId, weight] of aretesMap) {  
                  // Si le nombre d'arêtes dans notre ACPM est égal au nombre de sommet -1 du graphe et si l'ACPM est connexe
                 if(getAretesMap(ACPM).size === (ACPM.arrets.length - 1)){
                     break;
@@ -278,7 +278,7 @@
                  // Ajout des nouvelles adjacences
                  sommetA.sommetsAdjacents.set(sommetB, weight);
                  sommetB.sommetsAdjacents.set(sommetA, weight);
-                 // Si le graphe est cyclique, on retire l'adjacence ajoutée
+                 // Si le graphe est cyclique avec les nouvelles adjacences on les retire
                  if(hasCycle(ACPM)){
                      sommetA.sommetsAdjacents.delete(sommetB);
                      sommetB.sommetsAdjacents.delete(sommetA);
