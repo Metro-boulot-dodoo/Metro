@@ -6,8 +6,6 @@ import Graphe from "./Graphe/Graphe";
 import { HTTPResponse } from "./Utils";
 import Position from "./Types/Position";
 import cors from "cors"
-import IGraphe from './Types/IGraphe';
-import { cp } from 'fs';
 
 dotenv.config();
 
@@ -26,7 +24,6 @@ app.get('/', (req: Request, res: Response) => {
 
 app.listen(port, async () => {
     const fileContent = await File.read("./public/data/metro.txt");
-    const filePosition = await File.read("./public/data/pospoints.txt");
     const filePos = await File.read("./public/data/posGeo.json");
     const pos = await getPositionsNewFile(filePos);
     const arrets = await parseFile(fileContent, pos);
@@ -35,18 +32,10 @@ app.listen(port, async () => {
 });
 
 app.get("/stations", (req: Request, res: Response) => {
-    
-    const sortedStationsByLine: Array<[Array<Sommet>, number]> = [];
-    let copy: Array<Sommet> = graphe.arrets.map((sommet: Sommet) => {
-        return {
-            ...sommet,
-            sommetsAdjacents: convertMapToArray(sommet.sommetsAdjacents)
-        } as unknown as Sommet
-    });
-    const stationsByLine: Array<Array<Sommet>> = filterByLine(copy);
-    // console.log(stationsByLine);
-
-    res.send(HTTPResponse(200, "Data successfuly found", graphe.getArrets()));
+    res.send(HTTPResponse(200, "Data successfuly found", {
+        "sommets" : graphe.getArrets(),
+        "adjacents": graphe.arrets.map(sommet => Array.from(sommet.sommetsAdjacents.keys()))
+    }));
 });
 
 app.get("/station/:id", (req: Request, res: Response) => {
@@ -72,36 +61,6 @@ app.get("/pcc", (req: Request, res: Response) => {
         );
 });
 
-// fonction filterByLine qui filtre les sommets par ligne
-function filterByLine(arrets: Array<Sommet>): Array<Array<Sommet>> {
-    const stationsByLine: Array<Array<Sommet>> = [];
-    for (let i = 1; i <= 14; i++) {
-        const ligne = arrets.filter(s => s.ligne === i.toString());
-        stationsByLine.push(ligne);
-    }
-    return stationsByLine;
-}
-
-// fonction qui converti toutes les données des sommetsAdjacents de type Map en Array
-function convertMapToArray(map: Map<Sommet, number>): Array<Sommet> {
-    const array: Array<Sommet> = [];
-    map.forEach((value, key) => {
-        array.push(key);
-    });
-    return array;
-}
-
-// faire une fonction qui prend en paramètre un array de sommets et un sommet et verifie par l'id que ce sommet est dans l'array
-// si oui, on renvoie true, sinon false
-function isInArray(array: Array<Sommet>, sommet: Sommet): boolean {
-    let isInArray: boolean = false;
-    array.forEach((station) => {
-        if (station.id === sommet.id) {
-            isInArray = true;
-        }
-    });
-    return isInArray;
-}
 
 /**
  * Méthode permettant de parser un fichier respectant le format donné par le sujet
@@ -142,16 +101,17 @@ const parseFile: (content: string, positions: Map<string, Position>) => Promise<
 
 /**
  * Méthode permettant de récupérer les coordonnées (x,y) des sommets listés dans le fichier pospoints.txt
- * @param {string} content Contenu du fichier à parser
+ * @param content Contenu du fichier à parser
  * @returns Liste de coordonnées des sommets
  */
 const getPositionsNewFile: (content: string) => Promise<Map<string, Position>> = async (content: string) => {
     const fileJson = JSON.parse(content);
     const positions: Map<string, Position> = new Map();
 
-    fileJson.features.forEach((v: any) => {
-        positions.set((v.properties.STATION as string).toLowerCase(), { lat: v.geometry.coordinates[0], lng: v.geometry.coordinates[1] });
-    });
+    fileJson.features.forEach((v: Record<any, any>) =>
+        positions.set((v.properties.STATION as string).toLowerCase(),
+            {lat: v.geometry.coordinates[0], lng: v.geometry.coordinates[1]})
+    );
 
     return positions;
 };
