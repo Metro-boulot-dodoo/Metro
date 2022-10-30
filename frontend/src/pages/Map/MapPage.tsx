@@ -4,7 +4,6 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
 import { LatLngTuple } from "leaflet";
 import 'leaflet/dist/leaflet.css';
 import Sommet from "../../Types/Sommet";
-import { getAllSommets } from "../../data/sommet";
 import { Lines } from "../../components/Lines";
 
 const zoom: number = 13.45;
@@ -13,21 +12,14 @@ const mapCenteringPos: LatLngTuple = [48.864211, 2.380104];
 
 interface MapProps {
     setSommet: (sommet: Sommet) => void,
-    path: [Array<Sommet>, number] | undefined
+    path: [Array<Sommet>, number] | undefined,
+    sommets: Array<Sommet>,
+    adjacents: Sommet[][]
 }
 
 export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
-
-    const [sommets, setSommets] = React.useState<Array<Sommet>>([]);
-    const [adjacents, setAdjacents] = React.useState<Sommet[][]>(new Array<Sommet[]>());
-    React.useEffect(() => {
-        getAllSommets()
-            .then((result) => {
-                setSommets(result.sommets);
-                setAdjacents(result.adjacents);
-            })
-            .catch((error) => console.log(error));
-    }, []);
+    const sommets = props.sommets;
+    const adjacents = props.adjacents;
 
     /**
      * Functin used to build all the vertexes on the map
@@ -78,7 +70,7 @@ export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
             const previousSommet = pcc[i - 1];
             paths.push(
                 <Polyline
-                    key={i}
+                    key={`${i}-path`}
                     positions={[
                         [sommet.position.lng, sommet.position.lat],
                         [previousSommet.position.lng, previousSommet.position.lat]
@@ -165,7 +157,8 @@ export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
     return (
         <>
             <div className="mapContainer">
-                <MapContainer id="mapId"
+                <MapContainer
+                    id="mapId"
                     center={mapCenteringPos}
                     zoom={zoom}
                     style={{ height: '100vh', width: '100wh' }}

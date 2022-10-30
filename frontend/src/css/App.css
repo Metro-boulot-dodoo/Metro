@@ -45,22 +45,29 @@
     overflow-x: hidden;
 }
 
-.input-container input[type="select"] {
+.input-container select {
     border: 1px solid transparent;
     border-radius: 8px;
     padding: 0.6em 1.2em;
-    font-size: 1em;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
     transition: border-color 0.25s;
+    max-width: 14rem;
+    min-width: 8rem;
+
 }
 
-.input-container input[type="select"]:hover {
+.input-container select option {
+    max-width: 14rem;
+    min-width: 8rem;
+}
+
+.input-container select:hover {
     border-color: #646cff;
 }
-.input-container input[type="select"]:focus,
-.input-container input[type="select"]:focus-visible {
+.input-container select:focus,
+.input-container select:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
