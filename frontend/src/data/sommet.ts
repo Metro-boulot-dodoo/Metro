@@ -41,7 +41,7 @@ const getAllSommets = async () => {
 }
 
 /**
- * Service used to fetch the minimum spanning tree of the graphe.
+ * Service used to fetch the graph's minimum spanning tree (acpm).
  * @returns The minimum spanning tree with its weight.
  */
  const getACPM: () => Promise<[Array<Sommet>, number]> = async () => {

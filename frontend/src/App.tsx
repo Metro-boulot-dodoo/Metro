@@ -12,7 +12,7 @@ function App() {
     const [destination, setDestination] = React.useState<Sommet>();
     const [pcc, setPcc] = React.useState<[Array<Sommet>, number]>();
     const [sommets, setSommets] = React.useState<Array<Sommet>>([]);
-    const [ACPM, setACPM] = React.useState<Array<Sommet>>([]);
+    const [acpm, setAcpm] = React.useState<[Array<Sommet>, number]>();
     const [adjacents, setAdjacents] = React.useState<Sommet[][]>(new Array<Sommet[]>());
 
     React.useEffect(() => {
@@ -39,10 +39,18 @@ function App() {
     /**
      * Function used to clear depart and destination states
      */
-    const clearDD = () => {
+    const clearPcc = () => {
         setDepart(undefined);
         setDestination(undefined);
         setPcc(undefined);
+    }
+
+    /**
+     * Function used to clear pcc and acpm states
+     */
+    const clearAll = () => {
+        clearPcc();
+        setAcpm(undefined);
     }
 
     /**
@@ -51,18 +59,30 @@ function App() {
     const getPath = async () => {
         if (depart === undefined || destination === undefined)
             return;
+        if (acpm)
+            return;
         getPcc(depart, destination)
             .then((pcc) => setPcc(pcc))
             .catch((error) => console.log(error));
     }
 
+    /**
+     * Function used to call apcm fetching service
+     */
     const getPathFromACPM = async () => {
+        clearPcc();
         getACPM()
-            .then((acpm) => setACPM(acpm))
+            .then((acpm) => setAcpm(acpm))
             .catch((error) => console.log(error));
     }
 
 
+    /**
+     * Function used to build path explications 
+     * @param sommets A list of the vertexes to explain
+     * @param poids The weight of the path
+     * @returns The path explications in a JSX Element
+     */
     const buildPathExplications = (sommets: Array<Sommet>, poids: number) => {
         let ligne = sommets[0].ligne;
         let tour = 0;
@@ -89,12 +109,23 @@ function App() {
             </>
         );
     }
+
+    /**
+     * Function used to build the select options for the depart and destination select
+     * @returns Options in list of JSX Elements
+     */
     const buildSelectOptions = () => {
         const options = sommets.map(sommet=> <option key={sommet.id} value={sommet.id}>{`${sommet.name} - ${sommet.ligne}`}</option>);
         options.splice(0, 0, <option key={"default"} value={""}>Choisissez une station</option>);
         return options;
     }
 
+    /**
+     * Function used to handle depart and destination select change
+     * @param e The event triggered by the select
+     * @param setter The setter used to set the state. It corresponds to the select that triggered the event
+     * @param otherChoice The other select choice. It is used to stop the event if the user chooses the same station
+     */
     const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>, setter: (s: Sommet | undefined) => void, otherChoice: Sommet | undefined) => {
         if (e.target.value === "" ) {
             setter(undefined);
@@ -116,13 +147,14 @@ function App() {
                     {buildSelectOptions()}
                 </select>
                 <button onClick={getPath}>Recherche</button>
-                <button onClick={clearDD}>❌</button>
-                <button onClick={getPathFromACPM}>ACPM</button>
+                <button onClick={clearAll}>❌</button>
+                <button onClick={() => acpm ? setAcpm(undefined) : getPathFromACPM()}>ACPM</button>
             </div>
             <div className="map-path-description-container">
-                <MapPage setSommet={setDepartOrDestination} path={pcc} sommets={sommets} adjacents={adjacents}/>
+                <MapPage setSommet={setDepartOrDestination} path={pcc} sommets={sommets} adjacents={adjacents} acpm={acpm}/>
                 <div className="path-description-container">
                     {pcc ? buildPathExplications(pcc[0], pcc[1]) : null}
+                    {acpm ? buildPathExplications(acpm[0], acpm[1]) : null}
                 </div>
             </div>
 
