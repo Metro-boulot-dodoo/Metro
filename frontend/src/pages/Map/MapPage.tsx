@@ -14,7 +14,8 @@ interface MapProps {
     setSommet: (sommet: Sommet) => void,
     path: [Array<Sommet>, number] | undefined,
     sommets: Array<Sommet>,
-    adjacents: Sommet[][]
+    adjacents: Sommet[][],
+    acpm: [Array<Sommet>, number] | undefined
 }
 
 export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
@@ -171,6 +172,7 @@ export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
                     {sommets ? buildSommets() : null}
                     {adjacents && sommets ? drawLines(adjacents, sommets) : null}
                     {props.path ? buildPath(props.path[0], "#990000") : null}
+                    {props.acpm ? buildPath(props.acpm[0], "#000099") : null}
                 </MapContainer>
             </div>
         </>

@@ -40,4 +40,21 @@ const getAllSommets = async () => {
       return result.data;
 }
 
-export { getPcc, getAllSommets };
+/**
+ * Service used to fetch the graph's minimum spanning tree (acpm).
+ * @returns The minimum spanning tree with its weight.
+ */
+ const getACPM: () => Promise<[Array<Sommet>, number]> = async () => {
+
+      const res = await fetch(`${API_BASE_URL}/acpm`);
+      const result:JSONResponse<[Array<Sommet>, number]> = await res.json();
+      if (!res.ok)
+            return Promise.reject(new Error("Could not fetch data"));
+
+      if(result.statusCode !== 200)
+            return Promise.reject(new Error("Error when fetching data"));
+      return result.data ?? [new Array<Sommet>(), 0];
+}
+
+
+export { getPcc, getAllSommets, getACPM };

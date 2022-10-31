@@ -5,12 +5,12 @@
  * @filename File.ts
  */
 
-import * as fs from 'fs';
+import {readFile} from 'fs';
 
 export class File {
     public static async read(path: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            fs.readFile(path, (err, data) => {
+            readFile(path, (err, data) => {
                 if (err) {
                     reject(err);
                 } else {
