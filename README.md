@@ -1,26 +1,42 @@
 # Metro
+## Installer et lancer le projet
 
-Webhook vers le channel discord : Done 
+### Lancer le backend
+- Ouvrir 1 terminal dans le dossier Metro
+- Copier coller les commandes suivantes dans le terminal   
+Sur un système UNIX :
+```shell
+cd ./backend
+cp .env.example .env
+npm install
+npm run dev
+```
 
-Initialiser le projet : 
-- $> git clone git@github.com:Metro-boulot-dodoo/Metro.git
+Sur un système Windows :
+```shell
+cd ./backend
+copy .env.example .env
+npm install
+npm run dev
+```
 
-- $> git remote -v 
-verifier le remote avec cette commande, il est censé nous retourné 
-origin  git@github.com:Metro-boulot-dodoo/Metro.git (fetch)
-origin  git@github.com:Metro-boulot-dodoo/Metro.git (push) 
+### Lancer le frontend
+- Ouvrir 1 terminal dans le dossier Metro
+- Copier coller les commandes suivantes dans le terminal   
+Sur un système UNIX :
+```shell
+cd ./frontend
+npm install
+npm run dev
+```
 
-- Faite un test, en modifiant ce fichier (même un point, une virgule)
-$> git add .
-$> git commit -m "commit test"
-$> git push 
+Sur un système Windows :
+```shell
+cd ./frontend
+npm install
+npm run dev
+```
 
-Partie Typescript  
-- Les commandes importantes :
-tsc --help
-
-Compilation d'un fichier spécifique (il va chercher index.ts)
-tsc index 
-
-Compilation en générale
-tsc
+## Voir le projet
+- Ouvrir un navigateur internet moderne (Firefox, Chrome,...)
+- Se déplacer vers l'URL : ``http://localhost:5173/``
