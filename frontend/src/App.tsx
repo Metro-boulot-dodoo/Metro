@@ -105,7 +105,7 @@ function App() {
                 <div className={"path-explication-container"}>
                     {jsx}
                 </div>
-                <p className={"path-explication-poids"}>Temps total : {fmtMSS(poids)} min</p>
+                <p className={"path-explication-poids"}>Temps total : {fmtMSS(poids)} min | Poids total : {poids}</p>
             </>
         );
     }
