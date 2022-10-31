@@ -85,7 +85,7 @@ function App() {
      */
     const buildPathExplications = (sommets: Array<Sommet>, poids: number) => {
         let ligne = sommets[0].ligne;
-        let tour = 0;
+        let tour = 0, i= 0;
 
         const jsx = sommets.map((sommet) => {
             let ligneChanged = false;
@@ -94,7 +94,7 @@ function App() {
                 ligne = sommet.ligne;
             }
             return(
-                <div key={sommet.id} className={"path-explication-sommet"}>
+                <div key={i++} className={"path-explication-sommet"}>
                     <p className={"path-explication-sommet-name"}>{sommet.name}</p>
                     {ligneChanged || tour++ === 0 ? <img src={Lines[sommet.ligne].img} className={"path-explication-sommet-ligne"} alt={sommet.ligne}/> : null}
                 </div>

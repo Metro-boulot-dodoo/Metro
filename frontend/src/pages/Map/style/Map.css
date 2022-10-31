@@ -9,10 +9,26 @@
     bottom: 1%;
 }
 
-/*.leaflet-marker-icon:hover {
-    width: 32px !important;
-    height: 44px !important;
-}*/
+.leaflet-container  {
+    height: 93vh;
+    position: relative;
+}
 
-.path-line {
+/*query for widht less that 400px*/
+@media screen and (max-width: 475px) {
+    .leaflet-container {
+        height: 77vh;
+    }
+}
+
+@media screen and (max-width: 812px) and (min-width: 763px) {
+    .leaflet-container {
+        height: 82vh;
+    }
+}
+
+@media screen and (max-width: 763px) and (min-width: 475px) {
+    .leaflet-container {
+        height: 84vh;
+    }
 }

@@ -128,7 +128,7 @@ export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
             visited.set(sommet.id, true);
             const currentAdjs = sommetAdj[sommet.id];
             currentAdjs.forEach((item) => {
-                if (!visited.has(item.id) && item.ligne === ligne){
+                if (!visited.has(item.id) && item.ligne === ligne) {
                     pre.set(sommet.id, pre.get(sommet.id) ? pre.get(sommet.id)!.concat([item.id]) : [item.id]);
                     dfs(item, visited, ligne, pre);
                 }
@@ -141,7 +141,7 @@ export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
             adj.forEach((item) => {
                 const visited: Map<number, boolean> = new Map();
                 visited.set(station.id, true);
-                if(!visited.has(item.id) && item.ligne === ligne && !item.isEnd){
+                if (!visited.has(item.id) && item.ligne === ligne && !item.isEnd) {
                     previousVisited.set(station.id, previousVisited.get(station.id) ? previousVisited.get(station.id)!.concat([item.id]) : [item.id]);
                     dfs(item, visited, ligne, previousVisited);
                 }
@@ -154,7 +154,6 @@ export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
     }
 
 
-
     return (
         <>
             <div className="mapContainer">
@@ -162,7 +161,7 @@ export const MapPage: React.FC<MapProps> = (props): JSX.Element => {
                     id="mapId"
                     center={mapCenteringPos}
                     zoom={zoom}
-                    style={{ height: '100vh', width: '100wh' }}
+                    // style={{ height: '100vh', width: '100wh' }}
                 >
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
