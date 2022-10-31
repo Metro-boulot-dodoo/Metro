@@ -63,7 +63,7 @@ export default class Graphe implements IGraphe {
         }
 
         /**
-         * Fonction permettant de récupérer le PCC de start à end
+         * Fonction permettant de récupérer le PCC et son poids de start à end
          * @param prev {Map<Sommet, Sommet | null>} HashMap des prédécesseurs
          * @param finishPoint {Sommet} Le sommet de fin
          * @param startPoint {Sommet} Le sommet de départ
@@ -74,6 +74,7 @@ export default class Graphe implements IGraphe {
             const S: Array<Sommet> = [];
             let u = finishPoint;
             const poids = ds.get(u) as number;
+            // On remonte le chemin en partant de la fin jusqu'au début en utilisant les prédécesseurs et on ajoute les sommets dans l'ordre inverse dans S (le chemin final)
             if (prev.get(u) || u.id === startPoint.id)
                 while (u) {
                     S.push(u);
@@ -83,29 +84,36 @@ export default class Graphe implements IGraphe {
         }
 
         const distances: Map<Sommet, number> = new Map();
-        const Q: Array<Sommet> = [];
+        const sommetsNonVisites: Array<Sommet> = [];
         const predecesseurs: Map<Sommet, Sommet | null> = new Map();
+        // Initialisation de l'algo
         this.arrets.forEach(sommet => {
             distances.set(sommet, Infinity);
             predecesseurs.set(sommet, null);
-            Q.push(sommet);
+            sommetsNonVisites.push(sommet);
         });
         distances.set(start, 0);
 
-        while (Q.length != 0) {
-            const u = trouverMin(Q, distances) as Sommet;
+        while (sommetsNonVisites.length != 0) {
+            // Pour chaque sommet non visité, on trouve le sommet avec la plus petite distance
+            const u = trouverMin(sommetsNonVisites, distances) as Sommet;
+            // si on a trouvé le sommet de fin, on arrête l'algo
             if(u.id === end.id)
                 break;
-            const index = Q.indexOf(u);
-            Q.splice(index, 1);
+            // On retire le sommet de la liste des sommets non visités
+            const index = sommetsNonVisites.indexOf(u);
+            sommetsNonVisites.splice(index, 1);
             u.sommetsAdjacents.forEach((poids, v) => {
+                // Pour chaque sommet adjacent, on vérifie si on peut améliorer la distance
                 const alt = (distances.get(u) as number) + poids;
+                // Si oui, on met à jour la distance et le prédécesseur
                 if (alt < (distances.get(v) as number)) {
                     distances.set(v, alt);
                     predecesseurs.set(v, u);
                 }
             });
         }
+        // On retourne le PCC et la distance
         return getSolution(predecesseurs, end, start, distances);
     }
 
