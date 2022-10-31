@@ -51,3 +51,6 @@ npm run dev
 ## Voir le projet
 - Ouvrir un navigateur internet moderne (Firefox, Chrome,...)
 - Se déplacer vers l'URL : ``http://localhost:5173/``
+
+## Difficultés
+Si des difficultés surviennent (notamment durant l'installation), n'hésitez pas à nous contacter : florianlegal@outlook.fr ou florian.le-gal@efrei.net
