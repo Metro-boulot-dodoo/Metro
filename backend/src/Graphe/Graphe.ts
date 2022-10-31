@@ -94,6 +94,8 @@ export default class Graphe implements IGraphe {
 
         while (Q.length != 0) {
             const u = trouverMin(Q, distances) as Sommet;
+            if(u.id === end.id)
+                break;
             const index = Q.indexOf(u);
             Q.splice(index, 1);
             u.sommetsAdjacents.forEach((poids, v) => {
