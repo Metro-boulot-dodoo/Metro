@@ -1,7 +1,18 @@
 # Metro
+
+## Prérequis
+- NodeJS ^16.18.0
+- npm ^8.19.2
+
 ## Installer et lancer le projet
 
-### Lancer le backend
+### Installation et lancement du projet
+
+Deux solutions s'offrent à vous :
+- Lancer le script linux ou windows intitulé respectivement `install.sh` ou `install.bat`. Ce script va, à chaque lancement, installer les dépendances et lancer le projet.  
+- Suivre le tutoriel ci-dessous.  
+
+#### Lancer le backend
 - Ouvrir 1 terminal dans le dossier Metro
 - Copier coller les commandes suivantes dans le terminal   
 Sur un système UNIX :
@@ -20,7 +31,7 @@ npm install
 npm run dev
 ```
 
-### Lancer le frontend
+#### Lancer le frontend
 - Ouvrir 1 terminal dans le dossier Metro
 - Copier coller les commandes suivantes dans le terminal   
 Sur un système UNIX :
