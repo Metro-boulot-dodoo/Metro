@@ -78,7 +78,7 @@ function App() {
 
 
     /**
-     * Function used to build path explications 
+     * Function used to build path explications
      * @param sommets A list of the vertexes to explain
      * @param poids The weight of the path
      * @returns The path explications in a JSX Element
